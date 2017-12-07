@@ -40,7 +40,7 @@ class BooksApp extends React.Component {
           </div>
         )}
         <Route path="/search" render={() => (
-          <Search onSetCategory={this.setCategory} />
+          <Search myBooks={this.state.books} onSetCategory={this.setCategory} />
         )} />
 
         <Route path="/" exact render={() => (

@@ -7,11 +7,24 @@ class Search extends Component {
     state = {
         books: []
     }
+    
+    componentDidMount(){
+        document.getElementById("search").focus();
+    }
 
     setQuery = (e) => {
-        const query = e.target.value;
+        const [query, myBooks] = [e.target.value, this.props.myBooks];
         if (query.length > 0)
-            BooksAPI.search(query).then((data) => this.setState({ books: data }));
+            BooksAPI.search(query).then((data) => {
+                data = data.map(book => {
+                    //while this works, I wonder if there's a better way of doing this?
+                    myBooks.forEach((item) => {
+                        if(item.id === book.id) book.shelf = item.shelf;
+                    });
+                    return book;
+                })
+                this.setState({books:data});
+            });
     }
     render() {
         return (
@@ -19,7 +32,7 @@ class Search extends Component {
                 <div className="search-books-bar">
                     <Link to="/" className="close-search">Close</Link>
                     <div className="search-books-input-wrapper">
-                        <input onChange={this.setQuery} type="text" placeholder="Search by title or author" />
+                        <input id="search" onChange={this.setQuery} type="text" placeholder="Search by title or author" />
                     </div>
                 </div>
                 <div className="search-books-results">
